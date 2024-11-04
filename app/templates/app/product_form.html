@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app/css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            color: #2b2a29;
+        }
+
+        select, input[type="text"], input[type="number"], input[type="file"], textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #f26522;
+            color: black;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #f26522;
+        }
+
+        /* Category section */
+        .category-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-section input[type="text"] {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add New Product</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            {% for field in form %}
+                {% if field.name != 'category' and field.name != 'csrf_token' %} {# Exclude default category field #}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error-message" style="color: red;">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Custom Category Section -->
+            <div class="form-group category-section">
+                <label for="category">Category</label>
+                <select name="category" id="category">
+                    <option value="">Select Category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="new_category" id="new-category" placeholder="Or add a new category">
+            </div>
+
+            <button type="submit" class="save-btn">Add Product</button>
+        </form>
+
+        <a href="{{ url_for('main.home') }}" class="back-link">Back to Home</a>
+    </div>
+</body>
+</html>
